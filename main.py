@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # Inicializa o pygame
 pygame.init()
@@ -17,9 +18,20 @@ jogadorX = 370
 jogadorY = 480
 jogadorX_change = 0
 
+# inimigo
+imgInimigo = pygame.image.load("inimigo.png")
+inimigoX = random.randint(0, 800)
+inimigoY = random.randint(50, 150)
+inimigoX_change = 0.3
+inimigoY_change = 30
+
 
 def jogador(x, y):
     screen.blit(imgJogador, (x, y))
+
+
+def inimigo(x, y):
+    screen.blit(imgInimigo, (x, y))
 
 
 # Loop do jogo
@@ -42,11 +54,25 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 jogadorX_change = 0
 
+    # Movimento do jogador
+    jogadorX += jogadorX_change
+
+    # Verifica se o jogador chegou no limite da janela
     if jogadorX <= 0:
         jogadorX = 0
     elif jogadorX >= 736:
         jogadorX = 736
 
-    jogadorX += jogadorX_change
+    # Movimento do inimigo
+    inimigoX += inimigoX_change
+
+    if inimigoX <= 0:
+        inimigoX_change = 0.3
+        inimigoY += inimigoY_change
+    elif inimigoX >= 736:
+        inimigoX_change = -0.3
+        inimigoY += inimigoY_change
+
     jogador(jogadorX, jogadorY)
+    inimigo(inimigoX, inimigoY)
     pygame.display.update()
