@@ -42,6 +42,11 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 jogadorX_change = 0
 
+    if jogadorX <= 0:
+        jogadorX = 0
+    elif jogadorX >= 736:
+        jogadorX = 736
+
     jogadorX += jogadorX_change
     jogador(jogadorX, jogadorY)
     pygame.display.update()
