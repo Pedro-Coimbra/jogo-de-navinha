@@ -34,6 +34,7 @@ inimigoY = []
 inimigoX_change = [] 
 inimigoY_change = []
 numero_de_inimigos = 5
+mais_movimento = 2
 for x in range(numero_de_inimigos):
     imgInimigo.append(pygame.image.load("inimigo.png"))
     inimigoX.append(random.randint(0, 735))
@@ -56,12 +57,20 @@ pontuacao = 0
 font_pontuacao = pygame.font.Font('freesansbold.ttf', 22)
 pontuacaoX = 10
 pontuacaoY = 10
+# Dificuldade
+dificuldade = "muito fácil"
+font_dificuldade = pygame.font.Font('freesansbold.ttf', 22)
+dificuldadeX = 520
+dificuldadeY = 10
 
 # Texto Fim de Jogo
 font_fim_jogo = pygame.font.Font('freesansbold.ttf', 50)
 
 def mostrar_pontuacao(x, y):
     pontos = font_pontuacao.render("Pontuação: " + str(pontuacao), True, (255, 255, 255))
+    screen.blit(pontos, (x, y))
+def mostrar_dificuldade(x, y):
+    pontos = font_pontuacao.render("Dificuldade: " + str(dificuldade), True, (255, 255, 255))
     screen.blit(pontos, (x, y))
 
 def jogador(x, y):
@@ -108,7 +117,7 @@ while running:
             if event.key == pygame.K_RIGHT:
                 jogadorX_change = 5
             if event.key == pygame.K_SPACE:
-                if projetil_estado is "pronto":
+                if projetil_estado == "pronto":
                     produzir_som_efeito('laser.wav')
                     projetilX = jogadorX
                     atirar(projetilX, projetilY)
@@ -136,11 +145,12 @@ while running:
             break
 
         inimigoX[i] += inimigoX_change[i]
+
         if inimigoX[i] <= 0:
-            inimigoX_change[i] = 2
+            inimigoX_change[i] = mais_movimento
             inimigoY[i] += inimigoY_change[i]
         elif inimigoX[i] >= 736:
-            inimigoX_change[i] = -2
+            inimigoX_change[i] = -mais_movimento
             inimigoY[i] += inimigoY_change[i]
         
         # Colisão
@@ -152,17 +162,35 @@ while running:
             pontuacao += 1
             inimigoX[i] = random.randint(0, 735)
             inimigoY[i] = random.randint(50, 150)
-        
+            if pontuacao >= 60:
+                dificuldade = "cabuloso"
+                mais_movimento += 1
+            elif pontuacao == 50: 
+                dificuldade = "extremo"
+                mais_movimento += 1
+            elif pontuacao == 40: 
+                dificuldade = "muito dificil"
+                mais_movimento += 1
+            elif pontuacao == 30: 
+                dificuldade = "dificil"
+                mais_movimento += 1
+            elif pontuacao == 20: 
+                dificuldade = "médio"
+                mais_movimento += 1
+            elif pontuacao == 10: 
+                dificuldade = "fácil"
+                mais_movimento += 1
         inimigo(inimigoX[i], inimigoY[i], i)
 
     # Movimento da bala
     if projetilY <= 0:
         projetilY = 480
         projetil_estado = "pronto"
-    if projetil_estado is "tiro":
+    if projetil_estado == "tiro":
         atirar(projetilX, projetilY)
         projetilY -= projetilY_change
 
     jogador(jogadorX, jogadorY)
     mostrar_pontuacao(pontuacaoX, pontuacaoY)
+    mostrar_dificuldade(dificuldadeX, dificuldadeY)
     pygame.display.update()
