@@ -190,11 +190,16 @@ while before_running:
     botaoJogarNovamente = button((0, 255, 0), 205, 320, 380, 80, 'Jogar')
     botaoJogarNovamente.draw(screen, (0, 0, 0))
 
+    botaoJogar = button((0,255,0), 205,320,380,80,'Jogar')
+    botaoJogar.draw(screen,(0,0,0))
+    
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if botaoJogarNovamente.isOver(pos):
+            if botaoJogar.isOver(pos):
                 print(texto)
+                with open('ranking.txt','w') as arquivo:
+                    arquivo.write(str(texto))
                 nickname = texto
                 before_running = False
                 # Loop do jogo
