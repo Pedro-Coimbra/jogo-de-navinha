@@ -62,7 +62,7 @@ mixer.music.play(-1)
 background = pygame.image.load('background.png')
 
 # Adciona Titulo e icone
-pygame.display.set_caption("Jogo de Navinha")
+pygame.display.set_caption("Space Survival")
 icon = pygame.image.load('spaceship.png')
 pygame.display.set_icon(icon)
 
