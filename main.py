@@ -3,11 +3,57 @@ import random
 import math
 from pygame import mixer
 
+# Botão
+class button():
+    def __init__(self, color, x,y,width,height, text=''):
+        self.color = color
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.text = text
+
+    def draw(self,win,outline=None):
+        #Call this method to draw the button on the screen
+        if outline:
+            pygame.draw.rect(win, outline, (self.x-2,self.y-2,self.width+4,self.height+4),0)
+            
+        pygame.draw.rect(win, self.color, (self.x,self.y,self.width,self.height),0)
+        
+        if self.text != '':
+            font = pygame.font.SysFont('comicsans', 60)
+            text = font.render(self.text, 1, (0,0,0))
+            win.blit(text, (self.x + (self.width/2 - text.get_width()/2), self.y + (self.height/2 - text.get_height()/2)))
+
+    def isOver(self, pos):
+        #Pos is the mouse position or a tuple of (x,y) coordinates
+        if pos[0] > self.x and pos[0] < self.x + self.width:
+            if pos[1] > self.y and pos[1] < self.y + self.height:
+                return True
+            
+        return False
+
+
 # Inicializa o pygame
 pygame.init()
 
 # Cria a tela
 screen = pygame.display.set_mode((800, 600))
+
+
+# Caixa de texto
+base_font = pygame.font.Font(None,32)
+texto     = ''
+
+text_input = pygame.Rect(255,200,140,32)
+cor_ativa = pygame.Color('white')
+cor_passiva = pygame.Color('gray15')
+cor = cor_passiva
+ativa = False
+
+
+# Jogar novamente
+reiniciar = False
 
 #Som de fundo
 mixer.music.load('background.wav')
@@ -37,6 +83,7 @@ numero_de_inimigos = 5
 mais_movimento = 2
 for x in range(numero_de_inimigos):
     imgInimigo.append(pygame.image.load("inimigo.png"))
+    imgInimigo.append(pygame.image.load("inimigo2.png"))
     inimigoX.append(random.randint(0, 735))
     inimigoY.append(random.randint(50, 150))
     inimigoX_change.append(4)
@@ -94,10 +141,64 @@ def isColisao(inimigoX, inimigoY, projetilX, projetilY):
 def fim_de_jogo_texto():
     fim_jogo_texto = font_fim_jogo.render("Fim de Jogo", True, (255, 255, 255))
     screen.blit(fim_jogo_texto, (250, 250))
+    botaoJogarNovamente = button((0,255,0), 205,320,380,80,'Jogar novamente')
+    botaoJogarNovamente.draw(screen,(0,0,0))
+    for event in pygame.event.get():
+        pos = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if botaoJogarNovamente.isOver(pos):
+                print("deu bom")
+            else: 
+                return False
 
 def produzir_som_efeito(arquivo_som):
     som = mixer.Sound(arquivo_som)
     som.play()
+
+before_running = True
+while before_running:
+    # cor da tela
+    screen.fill((0, 0, 0))
+    # imagem de fundo da tela
+    screen.blit(background, (0,0))
+
+    pygame.draw.rect(screen,cor,text_input,2)
+
+    text_surface = base_font.render(texto, True, (255,255,255))
+    screen.blit(text_surface,(text_input.x + 5,text_input.y + 5))
+
+    text_input.w = max(300,text_surface.get_width() + 10)
+
+    botaoJogarNovamente = button((0,255,0), 205,320,380,80,'Jogar')
+    botaoJogarNovamente.draw(screen,(0,0,0))
+    
+    for event in pygame.event.get():
+        pos = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if botaoJogarNovamente.isOver(pos):
+                print(texto)
+                before_running = False
+            
+        if event.type == pygame.QUIT:
+            running = False
+            before_running = False
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if text_input.collidepoint(event.pos):
+                ativa = True
+
+        if event.type == pygame.KEYDOWN:
+            if ativa == True:
+                if event.key == pygame.K_BACKSPACE:
+                    texto = texto[:-1]
+                else:
+                    texto += event.unicode
+
+    if ativa:
+        cor = cor_ativa
+    else:
+        cor = cor_passiva
+    pygame.display.update()
 
 # Loop do jogo
 running = True
@@ -141,8 +242,9 @@ while running:
             for x in range(numero_de_inimigos):
                 inimigoY[x] = 2000
             
-            fim_de_jogo_texto()
-            break
+            if fim_de_jogo_texto():
+                print("teste")
+            
 
         inimigoX[i] += inimigoX_change[i]
 
