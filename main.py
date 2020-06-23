@@ -3,6 +3,7 @@ import random
 import math
 from pygame import mixer
 
+
 # Botão
 class button():
     def __init__(self, color, x, y, width, height, text=''):
@@ -54,7 +55,7 @@ ativa = False
 # Jogar novamente
 reiniciar = False
 
-#Som de fundo
+# Som de fundo
 mixer.music.load('background.wav')
 mixer.music.play(-1)
 
@@ -174,6 +175,7 @@ def produzir_som_efeito(arquivo_som):
     som = mixer.Sound(arquivo_som)
     som.play()
 
+
 before_running = True
 while before_running:
     # cor da tela
@@ -195,11 +197,12 @@ while before_running:
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if botaoJogarNovamente.isOver(pos):
-                print(texto)
-                nickname = texto
-                before_running = False
-                # Loop do jogo
-                running = True
+                print("Nome: ", texto)
+                if texto:
+                    nickname = texto
+                    before_running = False
+                    # Loop do jogo
+                    running = True
 
         if event.type == pygame.QUIT:
             running = False
