@@ -101,19 +101,19 @@ projetilX_change = 0
 projetilY_change = 10
 projetil_estado = "pronto"
 
+font = pygame.font.Font('freesansbold.ttf', 22)
 # Pontuação
+global pontuacao
 pontuacao = 0
-font_pontuacao = pygame.font.Font('freesansbold.ttf', 22)
 pontuacaoX = 10
 pontuacaoY = 10
 # Dificuldade
+global dificuldade 
 dificuldade = "muito fácil"
-font_dificuldade = pygame.font.Font('freesansbold.ttf', 22)
 dificuldadeX = 520
 dificuldadeY = 10
 # Nickname
 nickname = ''
-font_nickname = pygame.font.Font('freesansbold.ttf', 22)
 nicknameX = 10
 nicknameY = 570
 
@@ -122,17 +122,17 @@ font_fim_jogo = pygame.font.Font('freesansbold.ttf', 50)
 
 
 def mostrar_pontuacao(x, y):
-    pontos = font_pontuacao.render("Pontuação: " + str(pontuacao), True, (255, 255, 255))
+    pontos = font.render("Pontuação: " + str(pontuacao), True, (255, 255, 255))
     screen.blit(pontos, (x, y))
 
 
 def mostrar_dificuldade(x, y):
-    dif = font_dificuldade.render("Dificuldade: " + str(dificuldade), True, (255, 255, 255))
+    dif = font.render("Dificuldade: " + str(dificuldade), True, (255, 255, 255))
     screen.blit(dif, (x, y))
 
 
 def mostrar_nickname(x, y):
-    nome = font_pontuacao.render("Nome: " + str(nickname), True, (255, 255, 255))
+    nome = font.render("Nome: " + str(nickname), True, (255, 255, 255))
     screen.blit(nome, (x, y))
 
 
@@ -178,11 +178,14 @@ def atualiza_ranking():
     
     font_ranking = pygame.font.Font('freesansbold.ttf', 20)
     array_ranking_data = [font_ranking.render("Ranking", True, (255, 255, 255))]
-    for x in range(5):
-        array_ranking_data.append(font_ranking.render("  {} ... {} pontos".format(jogadores[x]["nome"], jogadores[x]["pontos"]), True, (255, 255, 255))) 
+    for x in range(len(jogadores)):
+        if len(jogadores) <= 5:
+            array_ranking_data.append(font_ranking.render("  {} ... {} pontos".format(jogadores[x]["nome"], jogadores[x]["pontos"]), True, (255, 255, 255)))
+        else:
+            break
     return array_ranking_data
 
-def fim_de_jogo_texto():
+def fim_de_jogo_texto(pontuacao):
     dados_ranking = atualiza_ranking()
     fim_jogo_texto = font_fim_jogo.render("Fim de Jogo", True, (255, 255, 255))
     heigth_ranking = 70
@@ -200,9 +203,11 @@ def fim_de_jogo_texto():
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if botaoJogarNovamente.isOver(pos):
+                for x in range(numero_de_inimigos):
+                    inimigoY[x] = random.randint(50, 150)
+                return 0
                 print("deu bom")
-            else:
-                return False
+    return pontuacao
 
 def produzir_som_efeito(arquivo_som):
     som = mixer.Sound(arquivo_som)
@@ -303,9 +308,11 @@ while running:
             for x in range(numero_de_inimigos):
                 inimigoY[x] = 2000
 
-            if fim_de_jogo_texto():
-                print("teste")
-
+            pontuacao = fim_de_jogo_texto(pontuacao)
+            if pontuacao == 0:
+                dificuldade = "muito fácil"
+                mais_movimento = 2
+                
         inimigoX[i] += inimigoX_change[i]
 
         if inimigoX[i] <= 0:
@@ -341,7 +348,7 @@ while running:
                 mais_movimento += 1
             elif pontuacao == 10:
                 dificuldade = "fácil"
-                mais_movimento += 1
+                mais_movimento += 1                
         inimigo(inimigoX[i], inimigoY[i], i)
 
     # Movimento da bala
