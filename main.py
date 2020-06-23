@@ -55,19 +55,19 @@ ativa = False
 reiniciar = False
 
 #Som de fundo
-mixer.music.load('background.wav')
+mixer.music.load("./asserts/background.wav")
 mixer.music.play(-1)
 
 # Fundo da tela
-background = pygame.image.load('background.png')
+background = pygame.image.load("./asserts/background.png")
 
 # Adciona Titulo e icone
 pygame.display.set_caption("Space Survival")
-icon = pygame.image.load('spaceship.png')
+icon = pygame.image.load('./asserts/spaceship.png')
 pygame.display.set_icon(icon)
 
 # Imagm e posicao do jogador
-imgJogador = pygame.image.load("jogador.png")
+imgJogador = pygame.image.load("./asserts/jogador.png")
 jogadorX = 370
 jogadorY = 480
 jogadorX_change = 0
@@ -82,8 +82,8 @@ numero_de_inimigos = 5
 mais_movimento = 2
 
 for x in range(numero_de_inimigos):
-    imgInimigo.append(pygame.image.load("inimigo.png"))
-    imgInimigo.append(pygame.image.load("inimigo2.png"))
+    imgInimigo.append(pygame.image.load("./asserts/inimigo.png"))
+    imgInimigo.append(pygame.image.load("./asserts/inimigo2.png"))
     inimigoX.append(random.randint(0, 735))
     inimigoY.append(random.randint(50, 150))
     inimigoX_change.append(4)
@@ -92,7 +92,7 @@ for x in range(numero_de_inimigos):
 # Projetil
 # pronto - projetil na tela
 # tiro   - projetil se movimentando
-imgProjetil = pygame.image.load("laser.png")
+imgProjetil = pygame.image.load("./asserts/laser.png")
 projetilX = 0
 projetilY = 480
 projetilX_change = 0
@@ -169,7 +169,6 @@ def fim_de_jogo_texto():
             else:
                 return False
 
-
 def produzir_som_efeito(arquivo_som):
     som = mixer.Sound(arquivo_som)
     som.play()
@@ -239,7 +238,7 @@ while running:
                 jogadorX_change = 5
             if event.key == pygame.K_SPACE:
                 if projetil_estado == "pronto":
-                    produzir_som_efeito('laser.wav')
+                    produzir_som_efeito("./asserts/laser.wav")
                     projetilX = jogadorX
                     atirar(projetilX, projetilY)
         if event.type == pygame.KEYUP:
@@ -277,7 +276,7 @@ while running:
         # Colisão
         colisao = isColisao(inimigoX[i], inimigoY[i], projetilX, projetilY)
         if colisao:
-            produzir_som_efeito('explosion.wav')
+            produzir_som_efeito("./asserts/explosion.wav")
             projetilY = 480
             projetil_estado = "pronto"
             pontuacao += 1
