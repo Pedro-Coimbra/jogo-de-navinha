@@ -197,8 +197,9 @@ while before_running:
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if botaoJogarNovamente.isOver(pos):
-                print("Nome: ", texto)
+                print("O Nome está vazio")
                 if texto:
+                    print("Nome: ", texto)
                     nickname = texto
                     before_running = False
                     # Loop do jogo
