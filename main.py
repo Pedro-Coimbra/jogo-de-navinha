@@ -169,14 +169,16 @@ while before_running:
 
     text_input.w = max(300,text_surface.get_width() + 10)
 
-    botaoJogarNovamente = button((0,255,0), 205,320,380,80,'Jogar')
-    botaoJogarNovamente.draw(screen,(0,0,0))
+    botaoJogar = button((0,255,0), 205,320,380,80,'Jogar')
+    botaoJogar.draw(screen,(0,0,0))
     
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if botaoJogarNovamente.isOver(pos):
+            if botaoJogar.isOver(pos):
                 print(texto)
+                with open('ranking.txt','w') as arquivo:
+                    arquivo.write(str(texto))
                 before_running = False
             
         if event.type == pygame.QUIT:
