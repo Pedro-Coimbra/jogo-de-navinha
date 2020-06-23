@@ -1,7 +1,9 @@
 import pygame
 import random
 import math
+import json
 from pygame import mixer
+
 
 # Botão
 class button():
@@ -55,8 +57,8 @@ ativa = False
 reiniciar = False
 
 #Som de fundo
-mixer.music.load("./asserts/background.wav")
-mixer.music.play(-1)
+# mixer.music.load("./asserts/background.wav")
+# mixer.music.play(-1)
 
 # Fundo da tela
 background = pygame.image.load("./asserts/background.png")
@@ -155,11 +157,44 @@ def isColisao(inimigoX, inimigoY, projetilX, projetilY):
     else:
         return False
 
+def atualiza_ranking():
+    with open("./ranking.json", "r") as ranking_file:
+        ranking = json.load(ranking_file)
+    
+    is_jogador_in_ranking = False
+    jogadores = ranking["players"]
+    for player in jogadores:
+        if player["nome"] == nickname:
+            is_jogador_in_ranking = True
+    
+    if not is_jogador_in_ranking and pontuacao > 0:
+        jogadores.append({"nome" : nickname, "pontos" : pontuacao})
+    
+    jogadores.sort(key=lambda x: x["pontos"], reverse=True)
+    new_ranking_data = {}
+    new_ranking_data["players"] = jogadores
+    with open("./ranking.json", "w") as ranking_file:
+        json.dump(new_ranking_data,ranking_file)
+    
+    font_ranking = pygame.font.Font('freesansbold.ttf', 20)
+    array_ranking_data = [font_ranking.render("Ranking", True, (255, 255, 255))]
+    for x in range(5):
+        array_ranking_data.append(font_ranking.render("  {} ... {} pontos".format(jogadores[x]["nome"], jogadores[x]["pontos"]), True, (255, 255, 255))) 
+    return array_ranking_data
 
 def fim_de_jogo_texto():
+    dados_ranking = atualiza_ranking()
     fim_jogo_texto = font_fim_jogo.render("Fim de Jogo", True, (255, 255, 255))
-    screen.blit(fim_jogo_texto, (250, 250))
-    botaoJogarNovamente = button((0, 255, 0), 205, 320, 380, 80, 'Jogar novamente')
+    heigth_ranking = 70
+    for jogador in dados_ranking:
+        if dados_ranking.index(jogador) == 0:
+            screen.blit(jogador, (340, heigth_ranking))
+        else:
+            screen.blit(jogador, (240, heigth_ranking))
+        heigth_ranking += 40
+    screen.blit(fim_jogo_texto, (250, 330))
+
+    botaoJogarNovamente = button((0, 255, 0), 205, 390, 380, 80, 'Jogar novamente')
     botaoJogarNovamente.draw(screen, (0, 0, 0))
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
@@ -172,6 +207,7 @@ def fim_de_jogo_texto():
 def produzir_som_efeito(arquivo_som):
     som = mixer.Sound(arquivo_som)
     som.play()
+
 
 before_running = True
 while before_running:
@@ -197,13 +233,14 @@ while before_running:
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if botaoJogar.isOver(pos):
-                print(texto)
-                with open('ranking.txt','w') as arquivo:
-                    arquivo.write(str(texto))
-                nickname = texto
-                before_running = False
-                # Loop do jogo
-                running = True
+                if texto:
+                    print("Nome: ", texto)
+                    nickname = texto
+                    before_running = False
+                    # Loop do jogo
+                    running = True
+                else:
+                    print("O nome está vazio.")
 
         if event.type == pygame.QUIT:
             running = False
