@@ -129,7 +129,7 @@ def mostrar_dificuldade(x, y):
 
 
 def mostrar_nickname(x, y):
-    nome = font.rende("Nome: " + str(nickname), True, (255, 255, 255))
+    nome = font.render("Nome: " + str(nickname), True, (255, 255, 255))
     screen.blit(nome, (x, y))
 
 
