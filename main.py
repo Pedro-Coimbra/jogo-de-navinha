@@ -100,21 +100,19 @@ projetilX_change = 0
 projetilY_change = 10
 projetil_estado = "pronto"
 
+font = pygame.font.Font('freesansbold.ttf', 22)
 # Pontuação
 global pontuacao
 pontuacao = 0
-font_pontuacao = pygame.font.Font('freesansbold.ttf', 22)
 pontuacaoX = 10
 pontuacaoY = 10
 # Dificuldade
 global dificuldade 
 dificuldade = "muito fácil"
-font_dificuldade = pygame.font.Font('freesansbold.ttf', 22)
 dificuldadeX = 520
 dificuldadeY = 10
 # Nickname
 nickname = ''
-font_nickname = pygame.font.Font('freesansbold.ttf', 22)
 nicknameX = 10
 nicknameY = 570
 
@@ -123,17 +121,17 @@ font_fim_jogo = pygame.font.Font('freesansbold.ttf', 50)
 
 
 def mostrar_pontuacao(x, y):
-    pontos = font_pontuacao.render("Pontuação: " + str(pontuacao), True, (255, 255, 255))
+    pontos = font.render("Pontuação: " + str(pontuacao), True, (255, 255, 255))
     screen.blit(pontos, (x, y))
 
 
 def mostrar_dificuldade(x, y):
-    dif = font_dificuldade.render("Dificuldade: " + str(dificuldade), True, (255, 255, 255))
+    dif = font.render("Dificuldade: " + str(dificuldade), True, (255, 255, 255))
     screen.blit(dif, (x, y))
 
 
 def mostrar_nickname(x, y):
-    nome = font_pontuacao.render("Nome: " + str(nickname), True, (255, 255, 255))
+    nome = font.render("Nome: " + str(nickname), True, (255, 255, 255))
     screen.blit(nome, (x, y))
 
 
