@@ -1,16 +1,1 @@
-{
-    "players": [
-        {
-            "nome": "Pedro Santos",
-            "pontos": 30
-        },
-        {
-            "nome": "Lucas Felippe",
-            "pontos": 20
-        },
-        {
-            "nome": "Carlos Sousa",
-            "pontos": 5
-        }
-    ]
-}
+{"players": [{"nome": "Pedro Santos", "pontos": 30}, {"nome": "Lucas Felippe", "pontos": 20}, {"nome": "Carlos Sousa", "pontos": 6}]}

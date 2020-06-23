@@ -165,9 +165,11 @@ def atualiza_ranking():
     jogadores = ranking["players"]
     for player in jogadores:
         if player["nome"] == nickname:
+            if player["pontos"] != pontuacao:
+                player["pontos"] = pontuacao
             is_jogador_in_ranking = True
     
-    if not is_jogador_in_ranking and pontuacao > 0:
+    if pontuacao > 0 and not is_jogador_in_ranking:
         jogadores.append({"nome" : nickname, "pontos" : pontuacao})
     
     jogadores.sort(key=lambda x: x["pontos"], reverse=True)
