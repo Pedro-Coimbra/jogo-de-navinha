@@ -101,11 +101,13 @@ projetilY_change = 10
 projetil_estado = "pronto"
 
 # Pontuação
+global pontuacao
 pontuacao = 0
 font_pontuacao = pygame.font.Font('freesansbold.ttf', 22)
 pontuacaoX = 10
 pontuacaoY = 10
 # Dificuldade
+global dificuldade 
 dificuldade = "muito fácil"
 font_dificuldade = pygame.font.Font('freesansbold.ttf', 22)
 dificuldadeX = 520
@@ -157,7 +159,7 @@ def isColisao(inimigoX, inimigoY, projetilX, projetilY):
         return False
 
 
-def fim_de_jogo_texto():
+def fim_de_jogo_texto(pontuacao):
     fim_jogo_texto = font_fim_jogo.render("Fim de Jogo", True, (255, 255, 255))
     screen.blit(fim_jogo_texto, (250, 250))
     botaoJogarNovamente = button((0, 255, 0), 205, 320, 380, 80, 'Jogar novamente')
@@ -166,9 +168,11 @@ def fim_de_jogo_texto():
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if botaoJogarNovamente.isOver(pos):
+                for x in range(numero_de_inimigos):
+                    inimigoY[x] = random.randint(50, 150)
+                return 0
                 print("deu bom")
-            else:
-                return False
+    return pontuacao
 
 
 def produzir_som_efeito(arquivo_som):
@@ -271,9 +275,11 @@ while running:
             for x in range(numero_de_inimigos):
                 inimigoY[x] = 2000
 
-            if fim_de_jogo_texto():
-                print("teste")
-
+            pontuacao = fim_de_jogo_texto(pontuacao)
+            if pontuacao == 0:
+                dificuldade = "muito fácil"
+                mais_movimento = 2
+                
         inimigoX[i] += inimigoX_change[i]
 
         if inimigoX[i] <= 0:
@@ -309,7 +315,7 @@ while running:
                 mais_movimento += 1
             elif pontuacao == 10:
                 dificuldade = "fácil"
-                mais_movimento += 1
+                mais_movimento += 1                
         inimigo(inimigoX[i], inimigoY[i], i)
 
     # Movimento da bala
